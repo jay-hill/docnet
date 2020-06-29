@@ -23,5 +23,9 @@ namespace Docnet.Core.Readers
         /// <param name="pageIndex">Page index.</param>
         /// <returns>Page reader.</returns>
         IPageReader GetPageReader(int pageIndex);
+
+        string GetMetaText(string tag);
+
+        PdfBookmarkCollection GetBookmarks();
     }
 }

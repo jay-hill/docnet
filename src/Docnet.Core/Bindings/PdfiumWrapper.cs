@@ -1946,6 +1946,36 @@ namespace Docnet.Core.Bindings
                 EntryPoint = "FPDF_GetNamedDest")]
             internal static extern IntPtr FPDF_GetNamedDest(IntPtr document, int index,
                 IntPtr buffer, int* buflen);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                 EntryPoint = "FPDF_GetMetaText")]
+            internal static extern uint FPDF_GetMetaText(IntPtr document, string tag,
+                byte[] buffer, uint buflen);
+
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                 EntryPoint = "FPDFBookmark_GetFirstChild")]
+            public static extern IntPtr FPDFBookmark_GetFirstChild(IntPtr document, IntPtr bookmark);
+
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                 EntryPoint = "FPDFBookmark_GetNextSibling")]
+            public static extern IntPtr FPDFBookmark_GetNextSibling(IntPtr document, IntPtr bookmark);
+
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                 EntryPoint = "FPDFBookmark_GetTitle")]
+            public static extern uint FPDFBookmark_GetTitle(IntPtr bookmark, byte[] buffer, uint buflen);
+
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                 EntryPoint = "FPDFBookmark_GetAction")]
+            public static extern IntPtr FPDFBookmark_GetAction(IntPtr bookmark);
+
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                 EntryPoint = "FPDFBookmark_GetDest")]
+            public static extern IntPtr FPDFBookmark_GetDest(IntPtr document, IntPtr bookmark);
+
+            [DllImport("pdfium", CallingConvention = CallingConvention.Cdecl,
+                    EntryPoint = "FPDFDest_GetDestPageIndex")]
+            public static extern uint FPDFDest_GetDestPageIndex(IntPtr document, IntPtr dest);
         }
 
         public static void FPDF_InitLibrary()
@@ -2341,6 +2371,85 @@ namespace Docnet.Core.Bindings
                 else __result0 = FpdfDestT.__CreateInstance(__ret);
                 return __result0;
             }
+        }
+
+        public static uint FPDF_GetMetaText(FpdfDocumentT document, string tag, byte[] buffer, uint length)
+        {
+            var __arg0 = ReferenceEquals(document, null) ? IntPtr.Zero : document.__Instance;
+            return __Internal.FPDF_GetMetaText(__arg0, tag, buffer, length);
+        }
+
+        //
+        public static FpdfBookmarkT FPDFBookmark_GetFirstChild(FpdfDocumentT document, FpdfBookmarkT bookmark)
+        {
+            var __arg0 = ReferenceEquals(document, null) ? IntPtr.Zero : document.__Instance;
+            var __arg1 = ReferenceEquals(bookmark, null) ? IntPtr.Zero : bookmark.__Instance;
+            var __ret = __Internal.FPDFBookmark_GetFirstChild(__arg0, __arg1);
+
+            FpdfBookmarkT __result0;
+            if (__ret == IntPtr.Zero) __result0 = FpdfBookmarkT.__CreateInstance(IntPtr.Zero);
+            else if (FpdfBookmarkT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (FpdfBookmarkT)FpdfBookmarkT
+                    .NativeToManagedMap[__ret];
+            else __result0 = FpdfBookmarkT.__CreateInstance(__ret);
+            return __result0;
+        }
+
+        public static FpdfBookmarkT FPDFBookmark_GetNextSibling(FpdfDocumentT document, FpdfBookmarkT bookmark)
+        {
+            var __arg0 = ReferenceEquals(document, null) ? IntPtr.Zero : document.__Instance;
+            var __arg1 = ReferenceEquals(bookmark, null) ? IntPtr.Zero : bookmark.__Instance;
+            var __ret = __Internal.FPDFBookmark_GetNextSibling(__arg0, __arg1);
+
+            FpdfBookmarkT __result0;
+            if (__ret == IntPtr.Zero) __result0 = FpdfBookmarkT.__CreateInstance(IntPtr.Zero);
+            else if (FpdfBookmarkT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (FpdfBookmarkT)FpdfBookmarkT
+                    .NativeToManagedMap[__ret];
+            else __result0 = FpdfBookmarkT.__CreateInstance(__ret);
+            return __result0;
+        }
+
+        public static uint FPDFBookmark_GetTitle(FpdfBookmarkT bookmark, byte[] buffer, uint buflen)
+        {
+            var __arg0 = ReferenceEquals(bookmark, null) ? IntPtr.Zero : bookmark.__Instance;
+            return __Internal.FPDFBookmark_GetTitle(__arg0, buffer, buflen);
+        }
+
+        public static FpdfActionT FPDFBookmark_GetAction(FpdfBookmarkT bookmark)
+        {
+            var __arg0 = ReferenceEquals(bookmark, null) ? IntPtr.Zero : bookmark.__Instance;
+            var __ret = __Internal.FPDFBookmark_GetAction(__arg0);
+
+            FpdfActionT __result0;
+            if (__ret == IntPtr.Zero) __result0 = null;
+            else if (FpdfActionT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (FpdfActionT)FpdfActionT
+                    .NativeToManagedMap[__ret];
+            else __result0 = FpdfActionT.__CreateInstance(__ret);
+            return __result0;
+        }
+
+        public static FpdfDestT FPDFBookmark_GetDest(FpdfDocumentT document, FpdfBookmarkT bookmark)
+        {
+            var __arg0 = ReferenceEquals(document, null) ? IntPtr.Zero : document.__Instance;
+            var __arg1 = ReferenceEquals(bookmark, null) ? IntPtr.Zero : bookmark.__Instance;
+            var __ret = __Internal.FPDFBookmark_GetDest(__arg0, __arg1);
+
+            FpdfDestT __result0;
+            if (__ret == IntPtr.Zero) __result0 = null;
+            else if (FpdfDestT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (FpdfDestT)FpdfDestT
+                    .NativeToManagedMap[__ret];
+            else __result0 = FpdfDestT.__CreateInstance(__ret);
+            return __result0;
+        }
+
+        internal static uint FPDFDest_GetPageIndex(FpdfDocumentT document, FpdfDestT dest)
+        {
+            var __arg0 = ReferenceEquals(document, null) ? IntPtr.Zero : document.__Instance;
+            var __arg1 = ReferenceEquals(dest, null) ? IntPtr.Zero : dest.__Instance;
+            return __Internal.FPDFDest_GetDestPageIndex(__arg0, __arg1);
         }
     }
 
@@ -3486,7 +3595,7 @@ namespace Docnet.Core.Bindings
                 EntryPoint = "FPDFFormObj_GetMatrix")]
             internal static extern int FPDFFormObjGetMatrix(IntPtr form_object, double* a, double* b,
                 double* c, double* d, double* e, double* f);
-        }
+         }
 
         public static FpdfDocumentT FPDF_CreateNewDocument()
         {

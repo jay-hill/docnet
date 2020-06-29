@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Docnet.Core.Exceptions;
 using Docnet.Core.Models;
 using Docnet.Tests.Integration.Utils;
@@ -91,6 +92,51 @@ namespace Docnet.Tests.Integration
                 var version = reader.GetPdfVersion();
 
                 Assert.Equal(expectedVersion, version.Number);
+            }
+        }
+
+        [Theory]
+        [InlineData(Input.FromFile, "Docs/simple_0.pdf", null, "Title", "PDF - Wikipedia")]
+        [InlineData(Input.FromBytes, "Docs/simple_0.pdf", null, "Title", "PDF - Wikipedia")]
+        [InlineData(Input.FromFile, "Docs/simple_1.pdf", null, "Title", "PDF")]
+        [InlineData(Input.FromBytes, "Docs/simple_1.pdf", null, "Title", "PDF")]
+        [InlineData(Input.FromFile, "Docs/simple_2.pdf", null, "Title", "")]
+        [InlineData(Input.FromBytes, "Docs/simple_2.pdf", null, "Title", "")]
+        [InlineData(Input.FromFile, "Docs/simple_3.pdf", null, "Title", "")]
+        [InlineData(Input.FromBytes, "Docs/simple_3.pdf", null, "Title", "")]
+        [InlineData(Input.FromFile, "Docs/protected_0.pdf", "password", "Title", "Secret (disambiguation) - Wikipedia")]
+        [InlineData(Input.FromBytes, "Docs/protected_0.pdf", "password", "Title", "Secret (disambiguation) - Wikipedia")]
+        public void GetMetaText_WhenCalled_ShouldReturnCorrectResults(Input type, string filePath, string password, string tag, string expectedValue)
+        {
+            using (var reader = _fixture.GetDocReader(type, filePath, password, 10, 10))
+            {
+                var value = reader.GetMetaText(tag);
+                Assert.Equal(expectedValue, value);
+            }
+        }
+
+        [Theory]
+        [InlineData(Input.FromFile, "Docs/simple_0.pdf", null, new string[] { })]
+        [InlineData(Input.FromBytes, "Docs/simple_0.pdf", null, new string[] { })]
+        [InlineData(Input.FromFile, "Docs/simple_1.pdf", null, new string[] { "Introduction to the Pdf995 Suite", "Sample Word document with links", "Excel Chart and Spreadsheet" })]
+        [InlineData(Input.FromBytes, "Docs/simple_1.pdf", null, new string[] { "Introduction to the Pdf995 Suite", "Sample Word document with links", "Excel Chart and Spreadsheet" })]
+        [InlineData(Input.FromFile, "Docs/simple_2.pdf", null, new string[] { "Template" })]
+        [InlineData(Input.FromBytes, "Docs/simple_2.pdf", null, new string[] { "Template" })]
+        [InlineData(Input.FromFile, "Docs/simple_3.pdf", null, new string[] { })]
+        [InlineData(Input.FromBytes, "Docs/simple_3.pdf", null, new string[] { })]
+        [InlineData(Input.FromFile, "Docs/protected_0.pdf", "password", new string[] { })]
+        [InlineData(Input.FromBytes, "Docs/protected_0.pdf", "password", new string[] { })]
+        public void GetBookmarks_WhenCalled_ShouldReturnCorrectResults(Input type, string filePath, string password, string[] titles)
+        {
+            using (var reader = _fixture.GetDocReader(type, filePath, password, 10, 10))
+            {
+                var bookmarks = reader.GetBookmarks();
+                Assert.Equal(titles.Length, bookmarks.Count);
+
+                foreach (string bookmarkTitle in bookmarks.Select(n => n.Title))
+                {
+                    Assert.Contains(bookmarkTitle, titles);
+                }
             }
         }
     }
